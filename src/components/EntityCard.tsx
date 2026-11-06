@@ -4,7 +4,7 @@ import type { Horse } from "../types";
 import { breed_labels, gender_labels, specialization_labels } from "../util";
 
 interface IHorseCard extends Horse {
-
+onDelete: (documentId: string) => void
 }
 export function EntityCard({name,documentId,DOB, height, breed, training, fotochka, owner,suit, gender, specialization }: IHorseCard) {
     

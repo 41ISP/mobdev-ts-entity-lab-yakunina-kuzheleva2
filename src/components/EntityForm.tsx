@@ -1,34 +1,34 @@
 import { useState } from "react"
-import { breed, gender } from "../util"
-import type { Breed, Gender, IHorseInput, Spec } from "../types"
+import {  GENDER,  gender_labels, type Breed, type Gender, type Specialization } from "../util"
 import { useHorsesStore } from "../store/useHorseStore"
 import { api } from "../api"
+import type { IHorseInput } from "../types"
 
-export function EntityForm() {
-   const initialForm = {
+const initialForm: IHorseInput = {
     name: "",
     DOB: "",
     owner: "",
     suit: "",
     height: 0,
     training: false,
-    specialization: "ShowJumping" as Spec,
+    specialization: "ShowJumping" as Specialization,
     breed: "Crossbreed" as Breed,
     gender: "Mare" as Gender,
     fotochka: []
-   
+
 }
 
 export function EntityForm() {
     const [form, setForm] = useState<IHorseInput>(initialForm)
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const { getHorses } = useHorsesStore()
-    
+    const addHorse = useHorsesStore((state) => state.addHorse)
+
     const onChange = <K extends keyof typeof form>(key: K, value: typeof form[K]) => {
         setForm((j) => ({ ...j, [key]: value }))
     }
 
-    const onSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault()
         try {
             setIsLoading(true)
@@ -41,46 +41,79 @@ export function EntityForm() {
             setIsLoading(false)
         }
     }
-   
+
     return (
-        <form className="form">
-            <h2>Добавить сущность</h2>
+        <form className="form" onSubmit={handleSubmit}>
+            <h2>Добавить лошадь</h2>
 
             <label className="field">
-                Строка
-                <input type="text" required />
+                {/* Порода
+                <input
+                    type="text"
+                    required
+                    value={form.breed}
+                    onChange={(e) => onChange("breed", e.target.value)} 
+                />*/}
             </label>
 
             <label className="field">
-                Длинный текст
-                <textarea rows={3} />
+                Имя Владелеца
+                <input
+                    type="text"
+                    required
+                    value={form.owner
+                    }
+                    onChange={(e) => onChange("owner", e.target.value)}
+                />
             </label>
 
             <label className="field">
-                Целое число
-                <input type="number" min={0} step={1} />
+                Дата рождения
+                <input
+                    type="date"
+                    required
+                    value={form.DOB}
+                    onChange={(e) => onChange("DOB", e.target.value)}
+                />
             </label>
 
             <label className="field">
-                Число с плавающией точкой
-                <input type="number" min={0} step={0.01} />
+                Масть
+                <input
+                    type="text"
+                    value={form.suit}
+                    onChange={(e) =>
+                        onChange("suit", e.target.value)
+                    }
+                />
             </label>
 
             <label className="field">
-                <span>Диапазон</span>
-                <input type="range" min={0} max={10} step={0.5} />
+                Рост
+                <input
+                    type="number"
+                    min={0}
+                    step={0.01}
+                    value={form.height ?? 0}
+                    onChange={(e) => onChange("height", Number(e.target.value))}
+                />
             </label>
 
             <label className="field">
-                Дата
-                <input type="date" required />
+                Фото
+                <input type="file" />
             </label>
 
             <label className="field">
-                Выпадающий список
+                Порода
                 <select>
-                    <option>Вариант 1</option>
-                </select>
+                    value={form.gender}
+                    onChange={(e) => onChange("gender", e.target.value as Gender)}
+                    {GENDER.map((d) => (
+                        <option key={d} value={d}>
+                            {gender_labels[d]}
+                        </option>
+                    ))}                </select>
             </label>
 
             <fieldset>
@@ -96,11 +129,16 @@ export function EntityForm() {
             </fieldset>
 
             <label className="check">
-                <input type="checkbox" />
-                Чекбокс
+                <input
+                    type="checkbox"
+                    checked={form.training}
+                    onChange={(e) => onChange("training", e.target.checked)}
+                />
+                тренинг
             </label>
 
             <button className="btn">Добавить</button>
         </form>
     )
 }
+

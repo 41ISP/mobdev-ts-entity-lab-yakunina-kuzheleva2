@@ -1,12 +1,11 @@
+import type { Breed, Gender, Specialization } from "./util"
+
 export interface  IStrapiResponse<T> {
   data: T
   meta: Meta
 }
 
-export type Gender = "Mare" | "Stallion" |  "Gelding"
-export type Spec = "ShowJumping" | "Dressage" | "Triathlon"
-export type Breed = "RWP" | "OrlovTrotter" | "Trakehner" | "KWPN" | "Budyonovskaya" |
-"Sangerschneider" | "TrojanPony" | "Crossbreed"
+
 
 export type IHorseInput = Omit<Horse, "id" | "documentId" | "createdAt" | "updatedAt" | "publishedAt">
 
@@ -22,7 +21,7 @@ export interface Horse {
   suit: string
   height: number
   training: boolean
-  specialization: Spec
+  specialization: Specialization
   breed: Breed
   gender: Gender
   fotochka?: Fotochka[]

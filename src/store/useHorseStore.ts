@@ -9,6 +9,7 @@ interface IHorseStore {
     removeHorse: (documentId: string) => Promise<void>
 }
 
+//const is load,error
 export const useHorsesStore = create<IHorseStore>((set) => ({
     horses: undefined,
     getHorses: async () => {
